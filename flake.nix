@@ -6,6 +6,10 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -13,6 +17,7 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.git-hooks-nix.flakeModule
+        inputs.treefmt-nix.flakeModule
       ];
 
       systems = [
@@ -23,16 +28,35 @@
       ];
 
       perSystem =
-        { config, pkgs, ... }:
         {
+          config,
+          pkgs,
+          lib,
+          ...
+        }:
+        lib.optionalAttrs (inputs.treefmt-nix ? flakeModule && inputs.git-hooks-nix ? flakeModule) {
+          treefmt.config = {
+            projectRootFile = ".git/config";
+            flakeFormatter = true;
+            flakeCheck = true;
+            programs = {
+              nixfmt.enable = true;
+              prettier.enable = true;
+            };
+            settings.global.excludes = [
+              ".envrc"
+              "LICENSE"
+              "node_modules"
+              "result"
+            ];
+          };
+
           pre-commit = {
-            check.enable = true;
-            settings = {
-              hooks = {
-                eslint.enable = true;
-                prettier.enable = true;
-                check-json.enable = true;
-                nixfmt-rfc-style.enable = true;
+            check.enable = false;
+            settings.hooks = {
+              treefmt = {
+                enable = true;
+                package = config.treefmt.build.wrapper;
               };
             };
           };
@@ -48,14 +72,6 @@
               ${config.pre-commit.installationScript}
             '';
           };
-
-          formatter =
-            let
-              script = ''
-                ${pkgs.pre-commit}/bin/pre-commit run --all-files
-              '';
-            in
-            pkgs.writeShellScriptBin "pre-commit-run" script;
 
           packages.default = pkgs.buildNpmPackage {
             pname = "cercai";
