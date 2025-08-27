@@ -49,6 +49,14 @@
             '';
           };
 
+          formatter =
+            let
+              script = ''
+                ${pkgs.pre-commit}/bin/pre-commit run --all-files
+              '';
+            in
+            pkgs.writeShellScriptBin "pre-commit-run" script;
+
           packages.default = pkgs.buildNpmPackage {
             pname = "cercai";
             version = "alpha";
