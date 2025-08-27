@@ -1,5 +1,5 @@
-import { PaginationData } from '../types'
-import './Pagination.css'
+import { PaginationData } from "../types";
+import "./Pagination.css";
 
 interface PaginationProps {
   pagination: PaginationData;
@@ -8,32 +8,35 @@ interface PaginationProps {
   onPreviousPage: () => void;
 }
 
-function Pagination({ pagination, onPageChange, onNextPage, onPreviousPage }: PaginationProps) {
-  const { currentPage, hasPreviousPage, hasNextPage } = pagination
+function Pagination({
+  pagination,
+  onPageChange,
+  onNextPage,
+  onPreviousPage,
+}: PaginationProps) {
+  const { currentPage, hasPreviousPage, hasNextPage } = pagination;
 
   // Generate page numbers to show (current page ± 2)
   const generatePageNumbers = () => {
-    const pages: number[] = []
-    const start = Math.max(1, currentPage - 2)
-    const end = currentPage + 2
+    const pages: number[] = [];
+    const start = Math.max(1, currentPage - 2);
+    const end = currentPage + 2;
 
     for (let i = start; i <= end; i++) {
-      pages.push(i)
+      pages.push(i);
     }
-    
-    return pages
-  }
 
-  const pageNumbers = generatePageNumbers()
+    return pages;
+  };
+
+  const pageNumbers = generatePageNumbers();
 
   return (
     <div className="pagination">
-      <div className="pagination-info">
-        Page {currentPage}
-      </div>
-      
+      <div className="pagination-info">Page {currentPage}</div>
+
       <div className="pagination-controls">
-        <button 
+        <button
           className="pagination-button"
           disabled={!hasPreviousPage}
           onClick={onPreviousPage}
@@ -44,20 +47,22 @@ function Pagination({ pagination, onPageChange, onNextPage, onPreviousPage }: Pa
         <div className="pagination-numbers">
           {currentPage > 3 && (
             <>
-              <button 
+              <button
                 className="pagination-number"
                 onClick={() => onPageChange(1)}
               >
                 1
               </button>
-              {currentPage > 4 && <span className="pagination-ellipsis">...</span>}
+              {currentPage > 4 && (
+                <span className="pagination-ellipsis">...</span>
+              )}
             </>
           )}
 
-          {pageNumbers.map(pageNum => (
+          {pageNumbers.map((pageNum) => (
             <button
               key={pageNum}
-              className={`pagination-number ${pageNum === currentPage ? 'active' : ''}`}
+              className={`pagination-number ${pageNum === currentPage ? "active" : ""}`}
               onClick={() => onPageChange(pageNum)}
             >
               {pageNum}
@@ -67,7 +72,7 @@ function Pagination({ pagination, onPageChange, onNextPage, onPreviousPage }: Pa
           <span className="pagination-ellipsis">...</span>
         </div>
 
-        <button 
+        <button
           className="pagination-button"
           disabled={!hasNextPage}
           onClick={onNextPage}
@@ -76,7 +81,7 @@ function Pagination({ pagination, onPageChange, onNextPage, onPreviousPage }: Pa
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export default Pagination
+export default Pagination;

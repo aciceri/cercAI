@@ -1,5 +1,5 @@
-import { useState, FormEvent } from 'react'
-import './SearchBar.css'
+import { useState, FormEvent } from "react";
+import "./SearchBar.css";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -7,14 +7,14 @@ interface SearchBarProps {
 }
 
 function SearchBar({ onSearch, loading }: SearchBarProps) {
-  const [query, setQuery] = useState<string>('')
+  const [query, setQuery] = useState<string>("");
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     if (query.trim()) {
-      onSearch(query)
+      onSearch(query);
     }
-  }
+  };
 
   return (
     <form className="search-bar" onSubmit={handleSubmit}>
@@ -27,16 +27,16 @@ function SearchBar({ onSearch, loading }: SearchBarProps) {
           className="search-input"
           disabled={loading}
         />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="search-button"
           disabled={loading || !query.trim()}
         >
-          {loading ? '⏳' : '🔍'}
+          {loading ? "⏳" : "🔍"}
         </button>
       </div>
     </form>
-  )
+  );
 }
 
-export default SearchBar
+export default SearchBar;

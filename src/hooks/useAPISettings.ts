@@ -1,22 +1,23 @@
-import { useState, useEffect, useCallback } from 'react';
-import { APISettings, APIProvider } from '../types';
+import { useState, useEffect, useCallback } from "react";
+import { APISettings, APIProvider } from "../types";
 
 const DEFAULT_SETTINGS: APISettings = {
   openrouter: {
-    apiKey: '',
-    model: 'deepseek/deepseek-r1-0528:free'
+    apiKey: "",
+    model: "deepseek/deepseek-r1-0528:free",
   },
   openai: {
-    apiKey: '',
-    model: 'gpt-4o'
-  }
+    apiKey: "",
+    model: "gpt-4o",
+  },
 };
 
-const STORAGE_KEY = 'search-engine-api-settings';
+const STORAGE_KEY = "search-engine-api-settings";
 
 export function useAPISettings() {
   const [settings, setSettings] = useState<APISettings>(DEFAULT_SETTINGS);
-  const [currentProvider, setCurrentProvider] = useState<APIProvider>('openrouter');
+  const [currentProvider, setCurrentProvider] =
+    useState<APIProvider>("openrouter");
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -25,16 +26,16 @@ export function useAPISettings() {
       if (stored) {
         const parsedSettings = JSON.parse(stored);
         setSettings({ ...DEFAULT_SETTINGS, ...parsedSettings });
-        
+
         // Set current provider based on which one has an API key
         if (parsedSettings.openai?.apiKey) {
-          setCurrentProvider('openai');
+          setCurrentProvider("openai");
         } else if (parsedSettings.openrouter?.apiKey) {
-          setCurrentProvider('openrouter');
+          setCurrentProvider("openrouter");
         }
       }
     } catch (error) {
-      console.error('Error loading API settings:', error);
+      console.error("Error loading API settings:", error);
     }
   }, []);
 
@@ -44,13 +45,15 @@ export function useAPISettings() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings));
     } catch (error) {
-      console.error('Error saving API settings:', error);
+      console.error("Error saving API settings:", error);
     }
   }, []);
 
   // Check if any provider is configured
   const hasValidConfiguration = useCallback(() => {
-    return settings.openrouter.apiKey.length > 0 || settings.openai.apiKey.length > 0;
+    return (
+      settings.openrouter.apiKey.length > 0 || settings.openai.apiKey.length > 0
+    );
   }, [settings]);
 
   // Get the best available provider (with API key)
@@ -58,24 +61,27 @@ export function useAPISettings() {
     if (settings[currentProvider]?.apiKey) {
       return currentProvider;
     }
-    
+
     if (settings.openrouter.apiKey) {
-      return 'openrouter';
+      return "openrouter";
     }
-    
+
     if (settings.openai.apiKey) {
-      return 'openai';
+      return "openai";
     }
-    
+
     return null;
   }, [settings, currentProvider]);
 
   // Change current provider
-  const changeProvider = useCallback((provider: APIProvider) => {
-    if (settings[provider]?.apiKey) {
-      setCurrentProvider(provider);
-    }
-  }, [settings]);
+  const changeProvider = useCallback(
+    (provider: APIProvider) => {
+      if (settings[provider]?.apiKey) {
+        setCurrentProvider(provider);
+      }
+    },
+    [settings],
+  );
 
   return {
     settings,
@@ -83,6 +89,6 @@ export function useAPISettings() {
     currentProvider,
     changeProvider,
     hasValidConfiguration,
-    getBestProvider
+    getBestProvider,
   };
 }

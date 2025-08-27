@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { GeneratedPage } from '../types';
-import './ResultPage.css';
+import { useEffect, useRef } from "react";
+import { GeneratedPage } from "../types";
+import "./ResultPage.css";
 
 interface ResultPageProps {
   page: GeneratedPage | null;
@@ -15,7 +15,7 @@ function ResultPage({ page, loading, onBack }: ResultPageProps) {
     if (page && iframeRef.current) {
       const iframe = iframeRef.current;
       const doc = iframe.contentDocument || iframe.contentWindow?.document;
-      
+
       if (doc) {
         // Combine HTML and CSS
         const fullHTML = `
@@ -52,11 +52,11 @@ function ResultPage({ page, loading, onBack }: ResultPageProps) {
     </style>
 </head>
 <body>
-    ${page.html.replace(/<!DOCTYPE html>.*?<body[^>]*>/is, '').replace(/<\/body>.*?<\/html>/is, '')}
+    ${page.html.replace(/<!DOCTYPE html>.*?<body[^>]*>/is, "").replace(/<\/body>.*?<\/html>/is, "")}
 </body>
 </html>
         `;
-        
+
         doc.open();
         doc.write(fullHTML);
         doc.close();
@@ -93,8 +93,13 @@ function ResultPage({ page, loading, onBack }: ResultPageProps) {
         <div className="result-page-content">
           <div className="error-page">
             <h2>⚠️ Page Generation Error</h2>
-            <p>The system was unable to generate valid content for this page.</p>
-            <p>This can happen when the AI fails to produce a response in the correct format.</p>
+            <p>
+              The system was unable to generate valid content for this page.
+            </p>
+            <p>
+              This can happen when the AI fails to produce a response in the
+              correct format.
+            </p>
             <div className="error-actions">
               <button className="retry-button" onClick={onBack}>
                 🔄 Back to results and try again
@@ -103,7 +108,10 @@ function ResultPage({ page, loading, onBack }: ResultPageProps) {
             <div className="error-details">
               <details>
                 <summary>Technical details</summary>
-                <p>The LLM may have returned a malformed response or failed to follow JSON generation instructions.</p>
+                <p>
+                  The LLM may have returned a malformed response or failed to
+                  follow JSON generation instructions.
+                </p>
               </details>
             </div>
           </div>
@@ -123,7 +131,7 @@ function ResultPage({ page, loading, onBack }: ResultPageProps) {
           <span className="page-url">{page.url}</span>
         </div>
       </div>
-      
+
       <div className="result-page-content">
         <iframe
           ref={iframeRef}

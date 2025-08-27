@@ -1,4 +1,4 @@
-import { APIConfig, APIResponse, SearchResult } from '../types';
+import { APIConfig, APIResponse, SearchResult } from "../types";
 
 export class APIService {
   private config: APIConfig;
@@ -9,10 +9,10 @@ export class APIService {
 
   private getAPIEndpoint(): string {
     switch (this.config.provider) {
-      case 'openrouter':
-        return 'https://openrouter.ai/api/v1/chat/completions';
-      case 'openai':
-        return 'https://api.openai.com/v1/chat/completions';
+      case "openrouter":
+        return "https://openrouter.ai/api/v1/chat/completions";
+      case "openai":
+        return "https://api.openai.com/v1/chat/completions";
       default:
         throw new Error(`Unsupported API provider: ${this.config.provider}`);
     }
@@ -20,15 +20,15 @@ export class APIService {
 
   private getHeaders(): Record<string, string> {
     const baseHeaders = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.config.apiKey}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.config.apiKey}`,
     };
 
-    if (this.config.provider === 'openrouter') {
+    if (this.config.provider === "openrouter") {
       return {
         ...baseHeaders,
-        'HTTP-Referer': window.location.origin,
-        'X-Title': 'Search Engine'
+        "HTTP-Referer": window.location.origin,
+        "X-Title": "Search Engine",
       };
     }
 
@@ -40,13 +40,14 @@ export class APIService {
     const headers = this.getHeaders();
 
     const response = await fetch(endpoint, {
-      method: 'POST',
+      method: "POST",
       headers,
       body: JSON.stringify({
         model: this.config.model,
-        messages: [{
-          role: 'user',
-          content: `Generate exactly 10 search results for "${query}" (page ${page}). Return ONLY valid JSON array with no extra text. Make sure results are different from previous pages:
+        messages: [
+          {
+            role: "user",
+            content: `Generate exactly 10 search results for "${query}" (page ${page}). Return ONLY valid JSON array with no extra text. Make sure results are different from previous pages:
 [
 {"title":"Title 1","description":"Description 1","url":"https://example1.com"},
 {"title":"Title 2","description":"Description 2","url":"https://example2.com"},
@@ -58,37 +59,41 @@ export class APIService {
 {"title":"Title 8","description":"Description 8","url":"https://example8.com"},
 {"title":"Title 9","description":"Description 9","url":"https://example9.com"},
 {"title":"Title 10","description":"Description 10","url":"https://example10.com"}
-]`
-        }]
-      })
+]`,
+          },
+        ],
+      }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('API Error:', response.status, errorText);
+      console.error("API Error:", response.status, errorText);
       throw new Error(`API Error: ${response.status}`);
     }
 
     const data: APIResponse = await response.json();
-    
+
     if (data.choices && data.choices[0] && data.choices[0].message) {
       const content = data.choices[0].message.content;
-      
+
       try {
-        const cleanedContent = content.replace(/&#x[\da-f]+;/gi, '').replace(/[^\x20-\x7E\n\r\t]/g, '');
-        
+        const cleanedContent = content
+          .replace(/&#x[\da-f]+;/gi, "")
+          .replace(/[^\x20-\x7E\n\r\t]/g, "");
+
         const jsonObjects: SearchResult[] = [];
-        const regex = /\{"title":\s*"([^"]+)",\s*"description":\s*"([^"]+)",\s*"url":\s*"([^"]+)"\}/g;
+        const regex =
+          /\{"title":\s*"([^"]+)",\s*"description":\s*"([^"]+)",\s*"url":\s*"([^"]+)"\}/g;
         let match;
 
         while ((match = regex.exec(cleanedContent)) !== null) {
           jsonObjects.push({
             title: match[1],
             description: match[2],
-            url: match[3]
+            url: match[3],
           });
         }
-        
+
         if (jsonObjects.length > 0) {
           return jsonObjects;
         } else {
@@ -99,38 +104,45 @@ export class APIService {
               return searchResults;
             }
           }
-          throw new Error('No valid results found');
+          throw new Error("No valid results found");
         }
       } catch (parseError) {
-        console.error('JSON Parse Error:', parseError);
-        return [{
-          title: `Results for "${query}" - Page ${page}`,
-          description: "Error parsing LLM response. Sample result.",
-          url: `https://example.com/page/${page}`
-        }];
+        console.error("JSON Parse Error:", parseError);
+        return [
+          {
+            title: `Results for "${query}" - Page ${page}`,
+            description: "Error parsing LLM response. Sample result.",
+            url: `https://example.com/page/${page}`,
+          },
+        ];
       }
     } else {
-      throw new Error('Invalid API response');
+      throw new Error("Invalid API response");
     }
   }
 
-  async generatePage(request: { result: SearchResult; originalQuery: string }): Promise<any> {
+  async generatePage(request: {
+    result: SearchResult;
+    originalQuery: string;
+  }): Promise<any> {
     const endpoint = this.getAPIEndpoint();
     const headers = this.getHeaders();
 
     // Use a different model for page generation if it's OpenRouter
-    const model = this.config.provider === 'openrouter' 
-      ? 'google/gemini-2.5-flash' 
-      : this.config.model;
+    const model =
+      this.config.provider === "openrouter"
+        ? "google/gemini-2.5-flash"
+        : this.config.model;
 
     const response = await fetch(endpoint, {
-      method: 'POST',
+      method: "POST",
       headers,
       body: JSON.stringify({
         model,
-        messages: [{
-          role: 'user',
-          content: `Create a realistic webpage that provides GENUINE, VALUABLE INFORMATION about the specific topic. This must be content that would actually be useful to someone searching for this information.
+        messages: [
+          {
+            role: "user",
+            content: `Create a realistic webpage that provides GENUINE, VALUABLE INFORMATION about the specific topic. This must be content that would actually be useful to someone searching for this information.
 
 SEARCH CONTEXT:
 - Query: "${request.originalQuery}"
@@ -203,9 +215,10 @@ EXACT FORMAT (ALL 4 PROPERTIES REQUIRED):
   "url": "${request.result.url}"
 }
 
-CRITICAL: Your response must end with the url property. Do not forget title and url!`
-        }]
-      })
+CRITICAL: Your response must end with the url property. Do not forget title and url!`,
+          },
+        ],
+      }),
     });
 
     if (!response.ok) {
@@ -213,25 +226,27 @@ CRITICAL: Your response must end with the url property. Do not forget title and 
     }
 
     const data: APIResponse = await response.json();
-    
+
     if (data.choices && data.choices[0] && data.choices[0].message) {
       const content = data.choices[0].message.content;
-      
+
       try {
         let jsonString = content.trim();
-        
-        jsonString = jsonString.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-        jsonString = jsonString.replace(/^```\s*/, '').replace(/\s*```$/, '');
-        
-        const startIndex = jsonString.indexOf('{');
+
+        jsonString = jsonString
+          .replace(/^```json\s*/, "")
+          .replace(/\s*```$/, "");
+        jsonString = jsonString.replace(/^```\s*/, "").replace(/\s*```$/, "");
+
+        const startIndex = jsonString.indexOf("{");
         if (startIndex !== -1) {
           let braceCount = 0;
           let endIndex = -1;
-          
+
           for (let i = startIndex; i < jsonString.length; i++) {
-            if (jsonString[i] === '{') {
+            if (jsonString[i] === "{") {
               braceCount++;
-            } else if (jsonString[i] === '}') {
+            } else if (jsonString[i] === "}") {
               braceCount--;
               if (braceCount === 0) {
                 endIndex = i;
@@ -239,24 +254,27 @@ CRITICAL: Your response must end with the url property. Do not forget title and 
               }
             }
           }
-          
+
           if (endIndex !== -1) {
             jsonString = jsonString.substring(startIndex, endIndex + 1);
           }
         }
-        
+
         let generatedPage;
         try {
           generatedPage = JSON.parse(jsonString);
         } catch (parseError: any) {
-          if (parseError.message && parseError.message.includes('column')) {
+          if (parseError.message && parseError.message.includes("column")) {
             const match = parseError.message.match(/line (\d+) column (\d+)/);
             if (match) {
               const line = parseInt(match[1]);
               const col = parseInt(match[2]);
-              const lines = jsonString.split('\n');
-              const errorLine = lines[line - 1] || '';
-              const errorContext = errorLine.substring(Math.max(0, col - 50), col + 50);
+              const lines = jsonString.split("\n");
+              const errorLine = lines[line - 1] || "";
+              const errorContext = errorLine.substring(
+                Math.max(0, col - 50),
+                col + 50,
+              );
               console.log(`JSON Error at line ${line}, column ${col}:`);
               console.log(`Context: "${errorContext}"`);
               console.log(`Character at error: "${errorLine[col - 1]}"`);
@@ -264,24 +282,33 @@ CRITICAL: Your response must end with the url property. Do not forget title and 
           }
           throw parseError;
         }
-        
-        if (generatedPage.html && generatedPage.css && generatedPage.title && generatedPage.url) {
+
+        if (
+          generatedPage.html &&
+          generatedPage.css &&
+          generatedPage.title &&
+          generatedPage.url
+        ) {
           return generatedPage;
         } else {
-          throw new Error(`Invalid page structure - missing: ${[
-            !generatedPage.html ? 'html' : '',
-            !generatedPage.css ? 'css' : '',
-            !generatedPage.title ? 'title' : '',
-            !generatedPage.url ? 'url' : ''
-          ].filter(Boolean).join(', ')}`);
+          throw new Error(
+            `Invalid page structure - missing: ${[
+              !generatedPage.html ? "html" : "",
+              !generatedPage.css ? "css" : "",
+              !generatedPage.title ? "title" : "",
+              !generatedPage.url ? "url" : "",
+            ]
+              .filter(Boolean)
+              .join(", ")}`,
+          );
         }
       } catch (parseError) {
-        console.error('JSON Parse Error:', parseError);
-        console.log('Content received:', content);
-        throw new Error('Error parsing JSON from LLM response');
+        console.error("JSON Parse Error:", parseError);
+        console.log("Content received:", content);
+        throw new Error("Error parsing JSON from LLM response");
       }
     } else {
-      throw new Error('Invalid API response');
+      throw new Error("Invalid API response");
     }
   }
 }

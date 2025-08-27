@@ -12,7 +12,7 @@ export interface APIResponse {
   }[];
 }
 
-export type APIProvider = 'openrouter' | 'openai';
+export type APIProvider = "openrouter" | "openai";
 
 export interface APIConfig {
   provider: APIProvider;
@@ -68,4 +68,4 @@ export interface ResultPageRequest {
   originalQuery: string;
 }
 
-export type AppView = 'search' | 'result';
+export type AppView = "search" | "result";

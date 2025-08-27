@@ -1,5 +1,5 @@
-import { SearchResult } from '../types'
-import './SearchResults.css'
+import { SearchResult } from "../types";
+import "./SearchResults.css";
 
 interface SearchResultsProps {
   results: SearchResult[];
@@ -8,13 +8,18 @@ interface SearchResultsProps {
   onResultClick?: (result: SearchResult) => void;
 }
 
-function SearchResults({ results, loading, hasSearched, onResultClick }: SearchResultsProps) {
+function SearchResults({
+  results,
+  loading,
+  hasSearched,
+  onResultClick,
+}: SearchResultsProps) {
   if (loading) {
     return (
       <div className="search-results">
         <div className="loading">Loading results...</div>
       </div>
-    )
+    );
   }
 
   if (!results || results.length === 0) {
@@ -23,7 +28,7 @@ function SearchResults({ results, loading, hasSearched, onResultClick }: SearchR
         <div className="search-results">
           <div className="no-results">No results to display</div>
         </div>
-      )
+      );
     } else {
       return null; // Don't display anything if no search has been performed
     }
@@ -31,13 +36,11 @@ function SearchResults({ results, loading, hasSearched, onResultClick }: SearchR
 
   return (
     <div className="search-results">
-      <div className="results-header">
-        {results.length} results found
-      </div>
+      <div className="results-header">{results.length} results found</div>
       {results.map((result, index) => (
-        <div 
-          key={index} 
-          className={`result-item ${onResultClick ? 'clickable' : ''}`}
+        <div
+          key={index}
+          className={`result-item ${onResultClick ? "clickable" : ""}`}
           onClick={() => onResultClick?.(result)}
         >
           <div className="result-url">{result.url}</div>
@@ -46,7 +49,7 @@ function SearchResults({ results, loading, hasSearched, onResultClick }: SearchR
         </div>
       ))}
     </div>
-  )
+  );
 }
 
-export default SearchResults
+export default SearchResults;

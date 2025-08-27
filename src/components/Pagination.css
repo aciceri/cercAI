@@ -94,18 +94,18 @@
   .pagination {
     align-items: center;
   }
-  
+
   .pagination-controls {
     justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
   }
-  
+
   .pagination-numbers {
     order: -1;
     justify-content: center;
   }
-  
+
   .pagination-button {
     min-width: 80px;
     justify-content: center;
@@ -118,11 +118,11 @@
     align-items: center;
     gap: 15px;
   }
-  
+
   .pagination-numbers {
     order: 0;
   }
-  
+
   .pagination-button {
     width: 120px;
   }
