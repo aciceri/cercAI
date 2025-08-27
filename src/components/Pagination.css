@@ -1,0 +1,129 @@
+.pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  margin: 30px 0;
+  padding: 0;
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: #70757a;
+  font-weight: 400;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  border: 1px solid #dadce0;
+  background: white;
+  color: #1a73e8;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #1a73e8;
+}
+
+.pagination-button:disabled {
+  background: #f8f9fa;
+  color: #bdc1c6;
+  cursor: not-allowed;
+  border-color: #dadce0;
+}
+
+.pagination-numbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pagination-number {
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #dadce0;
+  background: white;
+  color: #1a73e8;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.pagination-number:hover {
+  background: #f8f9fa;
+  border-color: #1a73e8;
+}
+
+.pagination-number.active {
+  background: #1a73e8;
+  color: white;
+  border-color: #1a73e8;
+}
+
+.pagination-ellipsis {
+  padding: 0 8px;
+  color: #70757a;
+  font-size: 14px;
+}
+
+.results-header {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #666;
+  padding-left: 4px;
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    align-items: center;
+  }
+  
+  .pagination-controls {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .pagination-numbers {
+    order: -1;
+    justify-content: center;
+  }
+  
+  .pagination-button {
+    min-width: 80px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-controls {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .pagination-numbers {
+    order: 0;
+  }
+  
+  .pagination-button {
+    width: 120px;
+  }
+}
