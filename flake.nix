@@ -32,7 +32,6 @@
                 eslint.enable = true;
                 prettier.enable = true;
                 check-json.enable = true;
-                check-yaml.enable = true;
                 nixfmt-rfc-style.enable = true;
               };
             };
