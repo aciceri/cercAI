@@ -16,6 +16,9 @@ function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentView, setCurrentView] = useState<AppView>("search");
   const [hasSearched, setHasSearched] = useState<boolean>(false);
+  const [searchDuration, setSearchDuration] = useState<number | undefined>(
+    undefined,
+  );
 
   const {
     settings,
@@ -90,14 +93,19 @@ function App() {
     const cachedResults = getCachedResults(query, page);
     if (cachedResults) {
       setResults(cachedResults);
+      setSearchDuration(undefined); // No duration for cached results
       return;
     }
 
     // If not cached, fetch from API
     setLoading(true);
+    const startTime = Date.now();
     try {
       console.log(`Loading page ${page} for query: "${query}"`);
       const newResults = await performSearch(query, page);
+
+      const duration = Date.now() - startTime;
+      setSearchDuration(duration);
 
       // Cache the results
       setCachedResults(query, page, newResults);
@@ -105,6 +113,7 @@ function App() {
     } catch (error) {
       console.error("Search error:", error);
       setResults([]);
+      setSearchDuration(undefined);
     } finally {
       setLoading(false);
     }
@@ -220,6 +229,7 @@ function App() {
             loading={loading}
             hasSearched={hasSearched}
             onResultClick={handleResultClick}
+            searchDuration={searchDuration}
           />
           {results.length > 0 && !loading && (
             <Pagination

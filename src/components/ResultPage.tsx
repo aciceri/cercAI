@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { GeneratedPage } from "../types";
+import LoadingAnimation from "./LoadingAnimation";
 import "./ResultPage.css";
 
 interface ResultPageProps {
@@ -74,8 +75,7 @@ function ResultPage({ page, loading, onBack }: ResultPageProps) {
         </div>
         <div className="result-page-content">
           <div className="loading-page">
-            <div className="loading-spinner"></div>
-            <p>Generating page...</p>
+            <LoadingAnimation message="Generating page..." showTimer={true} />
           </div>
         </div>
       </div>

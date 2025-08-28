@@ -1,4 +1,5 @@
 import { SearchResult } from "../types";
+import LoadingAnimation from "./LoadingAnimation";
 import "./SearchResults.css";
 
 interface SearchResultsProps {
@@ -6,6 +7,7 @@ interface SearchResultsProps {
   loading: boolean;
   hasSearched: boolean;
   onResultClick?: (result: SearchResult) => void;
+  searchDuration?: number;
 }
 
 function SearchResults({
@@ -13,11 +15,12 @@ function SearchResults({
   loading,
   hasSearched,
   onResultClick,
+  searchDuration,
 }: SearchResultsProps) {
   if (loading) {
     return (
       <div className="search-results">
-        <div className="loading">Loading results...</div>
+        <LoadingAnimation message="Loading results..." showTimer={true} />
       </div>
     );
   }
@@ -34,9 +37,19 @@ function SearchResults({
     }
   }
 
+  const formatDuration = (duration?: number) => {
+    if (!duration) return "";
+    if (duration < 1000) {
+      return ` (${Math.round(duration)}ms)`;
+    }
+    return ` (${(duration / 1000).toFixed(1)}s)`;
+  };
+
   return (
     <div className="search-results">
-      <div className="results-header">{results.length} results found</div>
+      <div className="results-header">
+        {results.length} results found{formatDuration(searchDuration)}
+      </div>
       {results.map((result, index) => (
         <div
           key={index}
