@@ -169,7 +169,7 @@ export default function APISettingsComponent({
                 <div>
                   <h4>OpenRouter</h4>
                   <p className="provider-description">
-                    Access to multiple models via OpenRouter.
+                    Access to multiple models via OpenRouter.{" "}
                     <a
                       href="https://openrouter.ai/keys"
                       target="_blank"
@@ -220,7 +220,7 @@ export default function APISettingsComponent({
                 <div>
                   <h4>OpenAI</h4>
                   <p className="provider-description">
-                    Direct access to OpenAI APIs.
+                    Direct access to OpenAI APIs.{" "}
                     <a
                       href="https://platform.openai.com/api-keys"
                       target="_blank"
