@@ -9,6 +9,9 @@
   background: #ffffff;
   color: #202124;
   margin-bottom: 15px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .header-content {
