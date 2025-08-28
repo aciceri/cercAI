@@ -1,4 +1,4 @@
-# Cercai
+# CercAI
 
 This is a project thrown together in one morning using Claude Code to test an idea I had under a beach umbrella.
 
@@ -16,6 +16,12 @@ A fake search engine that returns plausible results pretending to be a real sear
 ## Note
 
 Sometimes pages might not generate properly - if that happens, just open a new page.
+
+## Screenshots
+
+![Search Results List](screenshots/results-list.png)
+
+![Generated Page](screenshots/result.png)
 
 ## Important
 
