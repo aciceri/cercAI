@@ -12,7 +12,7 @@ interface APISettingsProps {
 }
 
 const DEFAULT_MODELS = {
-  openrouter: "deepseek/deepseek-r1-0528:free",
+  openrouter: "google/gemini-2.5-flash",
   openai: "gpt-4o",
 };
 

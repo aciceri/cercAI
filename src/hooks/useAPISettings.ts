@@ -4,7 +4,7 @@ import { APISettings, APIProvider } from "../types";
 const DEFAULT_SETTINGS: APISettings = {
   openrouter: {
     apiKey: "",
-    model: "deepseek/deepseek-r1-0528:free",
+    model: "google/gemini-2.5-flash",
   },
   openai: {
     apiKey: "",
