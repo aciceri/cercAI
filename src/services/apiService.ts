@@ -144,6 +144,43 @@ Make URLs realistic for each type:
     result: SearchResult;
     originalQuery: string;
   }): Promise<any> {
+    const maxAttempts = 5;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      console.log(
+        `🔄 Page generation attempt ${attempt}/${maxAttempts} for: ${request.result.title}`,
+      );
+
+      try {
+        const generatedPage = await this.attemptPageGeneration(
+          request,
+          attempt,
+        );
+        console.log(`✅ Page generation successful on attempt ${attempt}`);
+        return generatedPage;
+      } catch (error) {
+        console.log(
+          `❌ Page generation failed on attempt ${attempt}:`,
+          error instanceof Error ? error.message : error,
+        );
+
+        if (attempt === maxAttempts) {
+          console.log(
+            `🚫 All ${maxAttempts} attempts failed. Throwing final error.`,
+          );
+          throw error;
+        }
+      }
+    }
+  }
+
+  private async attemptPageGeneration(
+    request: {
+      result: SearchResult;
+      originalQuery: string;
+    },
+    attemptNumber: number,
+  ): Promise<any> {
     const endpoint = this.getAPIEndpoint();
     const headers = this.getHeaders();
 
@@ -311,7 +348,9 @@ CRITICAL: Your response must end with the url property. Do not forget title and 
                 Math.max(0, col - 50),
                 col + 50,
               );
-              console.log(`JSON Error at line ${line}, column ${col}:`);
+              console.log(
+                `🔍 Attempt ${attemptNumber} - JSON Error at line ${line}, column ${col}:`,
+              );
               console.log(`Context: "${errorContext}"`);
               console.log(`Character at error: "${errorLine[col - 1]}"`);
             }
@@ -339,12 +378,17 @@ CRITICAL: Your response must end with the url property. Do not forget title and 
           );
         }
       } catch (parseError) {
-        console.error("JSON Parse Error:", parseError);
+        console.error(
+          `🔍 Attempt ${attemptNumber} - JSON Parse Error:`,
+          parseError,
+        );
         console.log("Content received:", content);
-        throw new Error("Error parsing JSON from LLM response");
+        throw new Error(
+          `Attempt ${attemptNumber} - Error parsing JSON from LLM response`,
+        );
       }
     } else {
-      throw new Error("Invalid API response");
+      throw new Error(`Attempt ${attemptNumber} - Invalid API response`);
     }
   }
 }
