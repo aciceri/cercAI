@@ -47,7 +47,26 @@ export class APIService {
         messages: [
           {
             role: "user",
-            content: `Generate exactly 10 search results for "${query}" (page ${page}). Return ONLY valid JSON array with no extra text. Make sure results are different from previous pages:
+            content: `Generate exactly 10 search results for "${query}" (page ${page}). Include VARIETY - mix different types of sources for realistic results. Return ONLY valid JSON array with no extra text. Make sure results are different from previous pages.
+
+SOURCE VARIETY (mix these randomly, not always the same types):
+- Official websites, documentation, guides
+- Forums (Reddit, Stack Overflow, specialized communities)
+- Encyclopedias (Wikipedia, specialized wikis)
+- Dictionaries and reference sites
+- Blogs and personal websites  
+- News articles and magazines
+- Q&A sites with user answers
+- Review sites with user comments
+- Educational resources and tutorials
+- Social platforms with discussions
+
+Make URLs realistic for each type:
+- Forums: reddit.com/r/..., stackoverflow.com, discourse sites
+- Encyclopedias: en.wikipedia.org, specialized .wiki domains
+- Dictionaries: dictionary.com, merriam-webster.com, etc.
+- User content: Medium, personal blogs, community sites
+
 [
 {"title":"Title 1","description":"Description 1","url":"https://example1.com"},
 {"title":"Title 2","description":"Description 2","url":"https://example2.com"},
@@ -169,15 +188,32 @@ CONTENT REQUIREMENTS:
 5. Write in a knowledgeable, authoritative tone
 6. Structure with clear, topic-specific headings
 
-DESIGN VARIETY (choose randomly):
+FOR USER-GENERATED CONTENT (forums, comments, discussions):
+- Include multiple realistic usernames and diverse perspectives
+- Add timestamps, upvotes/downvotes, reply chains
+- Mix expert answers with casual user experiences
+- Include follow-up questions and clarifications
+- Show natural conversation flow with different writing styles
+- Add "solved" markers, best answer selections, or moderator notes when appropriate
+
+DESIGN VARIETY (choose randomly for maximum variety):
 - Technical documentation style (clean, organized)
-- Blog article with author bio
-- Review/comparison site
+- Blog article with author bio and comments section
+- Review/comparison site with user ratings
 - Educational resource page
 - News/magazine article
 - Product showcase page
 - Tutorial/how-to guide
 - Industry analysis report
+- Forum discussion thread with multiple user posts/replies
+- Wikipedia-style encyclopedia entry with references
+- Dictionary/glossary definition page
+- Q&A site with question and multiple answers
+- Reddit-style discussion with upvotes/downvotes
+- Community wiki with user contributions
+- Personal blog post with comment interactions
+- Social media discussion thread
+- Knowledge base article with user feedback
 
 VISUAL THEMES (vary each time):
 - Professional blue/gray scheme
